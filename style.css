@@ -5,5 +5,11 @@
 }
 
 .background2{
-    background-color: #F2EBE9;
+    background-color: rgb(244, 244, 244);
+}
+
+.text2{
+    font-family: sans-serif;
+    font-size: 20px;
+    font: 200;
 }
