@@ -1,3 +1,8 @@
+<?php
+require_once "logic.php"; 
+    ConnectDB();
+    StoreRegister()
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,25 +29,25 @@
                 <img src="assets/9710-registration-of-animated-illustrations.gif" class="img-fluid" alt="">
             </div>
             <div class="col-md-6">
-                <form action="">
+                <form action="" method="POST">
                     <div class="mb-3">
                         <h3>Register</h2>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Fullname</label>
-                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Masukan Fullname">
+                        <input type="text" name="fullname" class="form-control" id="exampleInputEmail1" placeholder="Masukan Fullname">
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="exampleInputPassword" placeholder="Masukan email">
+                        <input type="email" name="email" class="form-control" id="exampleInputPassword" placeholder="Masukan email">
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="exampleInputPassword" placeholder="Masukan Username">
+                        <input type="text" name="username" class="form-control" id="exampleInputPassword" placeholder="Masukan Username">
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword" placeholder="Masukan Password">
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword" placeholder="Masukan Password">
                     </div>
                     <div class="mb-3">
                         <div class="row">
@@ -58,7 +63,7 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <button class="container btn btn-primary">Register</button>
+                        <button class="container btn btn-primary" type="submit" name="register">Register</button>
                     </div>
                 </form>
             </div>

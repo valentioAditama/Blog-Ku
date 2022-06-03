@@ -1,3 +1,8 @@
+<?php 
+session_start();
+if(!isset($_SESSION["user"])) header("Location: login.php");
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -41,7 +46,7 @@
         <!-- Left links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" href="home.html">Home</a>
+            <a class="nav-link active" href="home.php">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="explore.html">Explore</a>
@@ -53,7 +58,7 @@
             <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="feedback.html">Feedback</a>
+            <a class="nav-link" href="feedback.php">Feedback</a>
           </li>
         </ul>
         <!-- Left links -->
@@ -86,21 +91,21 @@
         <div class="dropdown">
           <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
             role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-            <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25"
+            <img src="assets/profile.png" class="rounded-circle" height="25"
               alt="Black and White Portrait of a Man" loading="lazy" />
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
             <li>
-              <a class="dropdown-item" href="profile.html">My profile</a>
+              <a class="dropdown-item" href="profile.php">My profile</a>
             </li>
             <li>
-              <a class="dropdown-item" href="#">Logout</a>
+              <a class="dropdown-item" href="logout.php">Logout</a>
             </li>
           </ul>
         </div>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="profile.html" >Welcome, Valentio Aditama</a>
+            <a class="nav-link" href="profile.html" >Welcome, <?php echo $_SESSION["user"]["fullname"] ?></a>
           </li>
         </ul>
       </div>
@@ -220,7 +225,7 @@
       <div class="row mb-4">
         <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
+            <img src="assets/berita3.jpeg" class="card-img-top"
               alt="Fissure in Sandstone" />
             <div class="card-body">
               <h5 class="card-title">Card title</h5>
@@ -232,7 +237,7 @@
         </div>
         <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
+            <img src="assets/berita3.jpeg" class="card-img-top"
               alt="Fissure in Sandstone" />
             <div class="card-body">
               <h5 class="card-title">Card title</h5>
@@ -244,7 +249,7 @@
         </div>
         <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
+            <img src="assets/berita3.jpeg" class="card-img-top"
               alt="Fissure in Sandstone" />
             <div class="card-body">
               <h5 class="card-title">Card title</h5>
@@ -256,7 +261,7 @@
         </div>
         <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
+            <img src="assets/berita3.jpeg" class="card-img-top"
               alt="Fissure in Sandstone" />
             <div class="card-body">
               <h5 class="card-title">Card title</h5>

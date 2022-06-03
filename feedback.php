@@ -1,3 +1,36 @@
+<?php 
+  require_once("logic.php");
+  require_once("auth.php");
+  ConnectDB();
+  session_start();
+  if(!isset($_SESSION["user"])) header("Location: login.php");
+
+  if(isset($_POST["feedback"])){
+    $id_users = filter_input(INPUT_POST, 'id_users', FILTER_SANITIZE_STRING);
+    $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
+    $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_STRING);
+    $isi = filter_input(INPUT_POST, 'isi', FILTER_SANITIZE_STRING);
+
+    $sql = "INSERT INTO feedback (id_users, fullname, category, isi) VALUES (:id_users, :fullname, :category, :isi)";
+    global $db;
+    $stmt = $db->prepare($sql);
+
+    $params = array(
+      ":id_users" => $id_users,
+      ":fullname" => $fullname,
+      ":category" => $category, 
+      ":isi" => $isi
+    );
+
+     $stmt->execute($params);
+
+     if($stmt){
+       echo "<script>alert('Feedback Berhasil Dikirim')</script>";
+     } else {
+       echo "<script>alert('Feedback Gagal dikirimkan')</script>";
+     }
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -103,7 +136,7 @@
         </div>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="#">Welcome, Valentio Aditama</a>
+            <a class="nav-link" href="#">Welcome, <?php echo $_SESSION["user"]["fullname"] ?></a>
           </li>
         </ul>
       </div>
@@ -131,25 +164,26 @@
           <h3>Feedback</h3>
           <p class="text3">Yuk berikan feedback terbaik mu kepada Developer agar supaya Blog-ku makin keren di mata
             orang-orang</p>
-          <form action="">
+          <form action="" method="POST">
             <div class="mb-3">
               <label for="username">Fullname</label>
-              <input type="text" id="username" class="form-control" readonly value="Valentio Aditama">
+              <input type="text" name="id_users" class="form-control" readonly value="<?= $_SESSION["user"]["id"] ?>" hidden>
+              <input type="text" name="fullname" class="form-control" readonly value="<?= $_SESSION["user"]["fullname"] ?>">
             </div>
             <div class="mb-3">
               <label for="Category">Category</label>
-              <select id="Category" class="form-select" aria-label="Default select example">
-                <option value="1">Bugs</option>
-                <option value="2">Comment</option>
-                <option value="3">Other</option>
+              <select id="Category" name="category" class="form-select" aria-label="Default select example">
+                <option value="Bugs">Bugs</option>
+                <option value="Comment">Comment</option>
+                <option value="Other">Other</option>
               </select>
             </div>
             <div class="mb-3">
               <label for="describe">Isi</label>
-              <textarea name="" class="form-control" id="" cols="10" rows="5" placeholder="Masukan ide atau lainnya kamu disini yuk"></textarea>
+              <textarea name="isi" class="form-control" id="" cols="10" rows="5" placeholder="Masukan ide atau lainnya kamu disini yuk"></textarea>
             </div>
             <div class="mb-3">
-              <button class="btn btn-success container">Submit</button>
+              <button class="btn btn-success container" type="submit" name="feedback">Submit</button>
             </div>
           </form>
         </div>

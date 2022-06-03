@@ -1,3 +1,42 @@
+<?php 
+require_once("logic.php");
+ConnectDB();
+session_start();
+if(!isset($_SESSION["user"])) header("Location: login.php");
+
+if (isset($_POST["update_profile"])) {
+    $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+    $bio = filter_input(INPUT_POST, 'bio', FILTER_SANITIZE_STRING);
+    $profile_images = filter_input(INPUT_POST, 'profile_images', FILTER_SANITIZE_STRING);
+    
+    $sql = "UPDATE users SET fullname = :fullname, email = :email , username = :username, password = :password, bio = :bio, profile_images = :profile_images";
+
+    global $db;
+    $stmt = $db->prepare($sql);
+
+    $params = array(
+        ":fullname" => $fullname, 
+        ":email" => $email, 
+        ":username" => $username, 
+        ":password" => $password,
+        ":bio" => $bio,
+        ":profile_images" => $profile_images
+    );
+
+    $stmt->execute($params);
+    
+    if($stmt){
+        echo "<script>alert('Update Profile Berhasil')</script>";
+    }else{
+        echo "<script>alert('Update Profile Gagal')</script>";
+    }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,7 +75,7 @@
             <!-- Collapsible wrapper -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Navbar brand -->
-                <a class="navbar-brand mt-2 mt-lg-0" href="home.html">
+                <a class="navbar-brand mt-2 mt-lg-0" href="home.php">
                     <img src="assets/blogging.png" height="30" alt="Blog-ku" />
                 </a>
                 <!-- Left links -->
@@ -87,7 +126,7 @@
                 <div class="dropdown">
                     <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                         id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25"
+                        <img src="assets/profile.png" class="rounded-circle" height="25"
                             alt="Black and White Portrait of a Man" loading="lazy" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
@@ -104,7 +143,7 @@
                 </div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Welcome, Valentio Aditama</a>
+                        <a class="nav-link" href="#">Welcome, <?= $_SESSION["user"]["fullname"] ?></a>
                     </li>
                 </ul>
             </div>
@@ -117,8 +156,7 @@
             <div class="container-fluid">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="Myblog.html">MyBlog</a></li>
-                        <li class="breadcrumb-item"><a href="buatBlog.html">Buat Blog</a></li>
+                        <li class="breadcrumb-item"><a href="Myblog.html">Profile /</a></li>
                     </ol>
                 </nav>
             </div>
@@ -144,29 +182,25 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <form action="">
+                        <form action="" method="POST">
                             <div class="mb-3">
                                 <label for="fullname">Fullname</label>
-                                <input type="text" id="fullname" class="form-control" placeholder="Fullname">
+                                <input type="text" id="fullname" name="fullname" class="form-control" placeholder="Fullname" value="<?= $_SESSION["user"]["fullname"] ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label for="fullname">Email</label>
-                                <input type="text" id="fullname" class="form-control" placeholder="Email">
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Email" value="<?= $_SESSION["user"]["email"] ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label for="fullname">Username</label>
-                                <input type="text" id="fullname" class="form-control" placeholder="Username">
+                                <input type="text" id="username" name="username" class="form-control" placeholder="Username" value="<?= $_SESSION["user"]["username"] ?>" required>
                             </div>
                             <div class="mb-3">
-                                <label for="fullname">password old</label>
-                                <input type="text" id="fullname" class="form-control" placeholder="Password old">
+                                <label for="fullname">Ganti Password</label>
+                                <input type="password" id="password" name="password" class="form-control" placeholder="Ganti password">
                             </div>
-                            <div class="mb-3">
-                                <label for="fullname">password new</label>
-                                <input type="text" id="fullname" class="form-control" placeholder="Password New">
-                            </div>
+                            <button class="btn btn-primary" name="update_profile" type="submit">Save Profile</button>
                         </form>
-                        <button class="btn btn-primary">Save Profile</button>
                     </div>
                 </div>
             </div>

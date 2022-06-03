@@ -1,3 +1,49 @@
+<?php 
+
+$server = "localhost";
+$username = "root"; 
+$password = ""; 
+$db_name = "Blog-ku";
+
+try {
+    global $db;
+    $db = new PDO("mysql:host=$server;dbname=$db_name", $username, $password);
+} catch (PDOException $e) {
+    die ("Error Database".$e->getMessage());
+}
+
+if(isset($_POST['login'])){
+    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_STRING);
+    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+
+    $sql = "SELECT * FROM users WHERE email = :email or username = :username";
+    global $db;
+    $stmt = $db->prepare($sql);
+
+    $params = array(
+        ":username" => $username,
+        ":email" => $email
+    );
+
+    $stmt->execute($params);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if($user) {
+        if(password_verify($password, $user["password"])){
+            echo "<script>alert('Berhasil Login')</script>";
+            session_start();
+            $_SESSION["user"] = $user;
+            header("Location: home.php");
+        }else{
+            echo "<script>alert('Invalid Email dan password')</script>";
+        }
+    }else{
+        echo "<script>alert('Invalid Email dan password')</script>";
+    }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,31 +67,31 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-6">
-                <form action="">
+                <form action="" method="POST">
                     <div class="mb-3">
                         <h3>Selamat Datang di, <b>Blog-ku</b></h2>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Masukan Email">
+                        <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Masukan Email" required>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword"
-                            placeholder="Masukan Password">
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword"
+                            placeholder="Masukan Password" required>
                     </div>
                     <div class="mb-3">
                         <div class="row">
                             <div class="col-md-6">
-                                <a href="forgotPassword.html" class="text-decoration-none text-muted">Forgot Password?</a>
+                                <a href="forgotPassword.html" class="">Forgot Password?</a>
                             </div>
                             <div class="col-md-6 text-end">
-                                <a href="register.html">Register Account</a>
+                                <a href="register.php">Register Account</a>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <button class="container btn btn-primary">Login</button>
+                        <button class="container btn btn-primary" type="submit" name="login">Login</button>
                     </div>
                 </form>
             </div>
