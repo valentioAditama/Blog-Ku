@@ -1,42 +1,53 @@
 <?php 
-require_once("logic.php");
-ConnectDB();
 session_start();
-if(!isset($_SESSION["user"])) header("Location: login.php");
+include("auth.php");
+include("database.php");
+include("logic.php");
 
-if (isset($_POST["update_profile"])) {
-    $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-    $bio = filter_input(INPUT_POST, 'bio', FILTER_SANITIZE_STRING);
-    $profile_images = filter_input(INPUT_POST, 'profile_images', FILTER_SANITIZE_STRING);
-    
-    $sql = "UPDATE users SET fullname = :fullname, email = :email , username = :username, password = :password, bio = :bio, profile_images = :profile_images";
+$id = $_SESSION["user"]["id"];
+$showData = $db->query("SELECT * FROM users WHERE id='$id'");
 
-    global $db;
-    $stmt = $db->prepare($sql);
+if  (mysqli_num_rows($showData) == 0){ 
+}else{
+    $row = mysqli_fetch_assoc($showData);
+}
 
-    $params = array(
-        ":fullname" => $fullname, 
-        ":email" => $email, 
-        ":username" => $username, 
-        ":password" => $password,
-        ":bio" => $bio,
-        ":profile_images" => $profile_images
-    );
+if (isset($_POST["UpdateProfile"])) {
+    $id_Profile = $_POST["id"];
+    $fullname = $_POST["fullname"];
+    $email = $_POST["email"];
+    $username = $_POST["username"];
+    $bio = $_POST["bio"];
 
-    $stmt->execute($params);
-    
-    if($stmt){
-        echo "<script>alert('Update Profile Berhasil')</script>";
-    }else{
-        echo "<script>alert('Update Profile Gagal')</script>";
+    $query = "UPDATE users SET fullname='$fullname', email='$email', username='$username', bio='$bio' where id='$id_Profile'";
+    $result = mysqli_query($db, $query);
+    if($result){
+        echo "<script>alert('Update Profile berhasil di tambahkan');</script>";
+        echo "<script>window.location.href = window.location.href;</script>";
+    } else { 
+        echo "<script>alert('Update Profile Gagal di tambahkan')</script>";
+    }
+}
+
+if (isset($_POST["ganti_photo"])){
+    $id_Profile2 = $_POST["id_users"];
+    $img_name = $_FILES['thumbnails']['name'];
+    $tmp_img_name = $_FILES['thumbnails']['tmp_name'];
+    $folder = 'uploadProfile/'.$img_name;
+    move_uploaded_file($tmp_img_name, $folder);
+
+    $query2 = "UPDATE users SET profile_images='$folder' where id='$id_Profile2'";
+    $result2 = mysqli_query($db, $query2);
+
+    if ($result2) {
+        echo "<script>alert('Photo Profile Berhasil Di ubah')</script>";
+        echo "<script>window.location.href = window.location.href;</script>";
+    } else { 
+        echo "<script>alert('Photo Profile Gagal di ubah')</script>";
     }
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,7 +55,7 @@ if (isset($_POST["update_profile"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore</title>
+    <title>Profile</title>
     <link rel="icon" href="assets/blogging.png">
     <!-- MDB -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
@@ -131,19 +142,19 @@ if (isset($_POST["update_profile"])) {
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                         <li>
-                            <a class="dropdown-item" href="#">My profile</a>
+                            <a class="dropdown-item" href="profile.php?id=<?= $_SESSION["user"]["id"]?>">My profile</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#">Settings</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">Logout</a>
+                            <a class="dropdown-item" href="logout.php">Logout</a>
                         </li>
                     </ul>
                 </div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Welcome, <?= $_SESSION["user"]["fullname"] ?></a>
+                        <a class="nav-link" href="#">Welcome, <?php echo $row['fullname']; ?></a>
                     </li>
                 </ul>
             </div>
@@ -173,33 +184,55 @@ if (isset($_POST["update_profile"])) {
                             <h3>Edit Profile</h3>
                             <p3>Yuk edit profile kamu agar supaya profile-mu makin kece dan keren...</p3>
                         </div>
-                        <img src="assets/profile.png" height="200" alt="">
-                        <div class="mt-3 mb-3">
-                            <input type="file" class="form-control">
-                            <div class="mt-3">
-                                <button class="btn btn-primary container">Ganti Photo</button>
+                        <!-- <img src="assets/profile.png" alt=""> -->
+                        <img src="<?php
+                        $photo = $row['profile_images'];
+                        $photo2 = 'uploadProfile/'.$row['profile_images'];
+                        if (file_exists($photo) == FALSE){
+                            echo 'uploadProfile/profile.png';
+                        }else{
+                            echo $row['profile_images'];
+                        }
+                        ?>" height="200" alt="">
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            <div class="mt-3 mb-3">
+                                <input type="hidden" name="id_users" value="<?php echo $_SESSION['user']['id'] ?>" >
+                                <input type="file" name="thumbnails" class="form-control">
+                                <div class="mt-3">
+                                    <button class="btn btn-primary container" name="ganti_photo" type="submit">Ganti Photo</button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="col-md-6">
                         <form action="" method="POST">
                             <div class="mb-3">
                                 <label for="fullname">Fullname</label>
-                                <input type="text" id="fullname" name="fullname" class="form-control" placeholder="Fullname" value="<?= $_SESSION["user"]["fullname"] ?>" required>
+                                <input type="hidden" id="id" name="id" class="form-control" placeholder="Fullname"
+                                    value="<?php echo $row['id'] ?>" readonly>
+                                <input type="text" id="fullname" name="fullname" class="form-control"
+                                    placeholder="Fullname" value="<?php echo $row['fullname'] ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label for="fullname">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Email" value="<?= $_SESSION["user"]["email"] ?>" required>
+                                <input type="email" id="email" name="email" class="form-control" placeholder="Email"
+                                    value="<?php echo $row['email'] ?>" required>
                             </div>
                             <div class="mb-3">
                                 <label for="fullname">Username</label>
-                                <input type="text" id="username" name="username" class="form-control" placeholder="Username" value="<?= $_SESSION["user"]["username"] ?>" required>
+                                <input type="text" id="username" name="username" class="form-control"
+                                    placeholder="Username" value="<?php echo $row['username'] ?>" required>
                             </div>
                             <div class="mb-3">
+                                <label for="fullname">Bio</label>
+                                <textarea name="bio" class="form-control" id="" cols="10" rows="5"
+                                    placeholder="Bio-mu ada disini"><?php echo $row['bio'] ?></textarea>
+                            </div>
+                            <!-- <div class="mb-3">
                                 <label for="fullname">Ganti Password</label>
                                 <input type="password" id="password" name="password" class="form-control" placeholder="Ganti password">
-                            </div>
-                            <button class="btn btn-primary" name="update_profile" type="submit">Save Profile</button>
+                            </div> -->
+                            <button class="btn btn-primary" name="UpdateProfile" type="submit">Save Profile</button>
                         </form>
                     </div>
                 </div>

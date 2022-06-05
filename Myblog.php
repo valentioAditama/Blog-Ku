@@ -1,3 +1,10 @@
+<?php 
+session_start();
+include("auth.php");
+include("database.php");
+include("logic.php");
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +12,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Explore</title>
+  <title>MyBlog</title>
   <link rel="icon" href="assets/blogging.png">
   <!-- MDB -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
@@ -41,7 +48,7 @@
         <!-- Left links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="home.html">Home</a>
+            <a class="nav-link" href="home.php">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="explore.html">Explore</a>
@@ -86,12 +93,12 @@
         <div class="dropdown">
           <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
             role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-            <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25"
+            <img src="assets/profile.png" class="rounded-circle" height="25"
               alt="Black and White Portrait of a Man" loading="lazy" />
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
             <li>
-              <a class="dropdown-item" href="#">My profile</a>
+              <a class="dropdown-item" href="profile.php?id=<?php echo $_SESSION["user"]["id"] ?>">My profile</a>
             </li>
             <li>
               <a class="dropdown-item" href="#">Settings</a>
@@ -103,7 +110,7 @@
         </div>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="#">Welcome, Valentio Aditama</a>
+            <a class="nav-link" href="profile.php?id=<?php echo $_SESSION["user"]["id"] ?>">Welcome, <?php echo $_SESSION["user"]["fullname"] ?></a>
           </li>
         </ul>
       </div>
@@ -131,12 +138,31 @@
         <p3>Ayo Update terus perkembangan Blog kamu, Semangat!🔥😎</p3>
       </div>
       <div class="mt-3 mb-3">
-        <a href="buatBlog.html" class="btn btn-success">Buat Blog-ku ✍️</a>
+        <a href="buatBlog.php" class="btn btn-success">Buat Blog-ku ✍️</a>
       </div>
       <div class="row">
         <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
+            <img src="assets/berita3.jpeg" class="card-img-top"
+              alt="Fissure in Sandstone" />
+            <div class="card-body">
+              <h5 class="card-title">Card title</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
+                content.</p>
+              <div class="row">
+                <div class="col-md-4">
+                  <a href="#!" class="btn btn-md btn-success">Edit</a>
+                </div>
+                <div class="col-md-4">
+                <a href="#!" class="btn btn-md btn-danger">Hapus</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card">
+            <img src="assets/berita3.jpeg" class="card-img-top"
               alt="Fissure in Sandstone" />
             <div class="card-body">
               <h5 class="card-title">Card title</h5>
@@ -148,7 +174,7 @@
         </div>
         <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
+            <img src="assets/berita3.jpeg" class="card-img-top"
               alt="Fissure in Sandstone" />
             <div class="card-body">
               <h5 class="card-title">Card title</h5>
@@ -160,19 +186,7 @@
         </div>
         <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
+            <img src="assets/berita3.jpeg" class="card-img-top"
               alt="Fissure in Sandstone" />
             <div class="card-body">
               <h5 class="card-title">Card title</h5>

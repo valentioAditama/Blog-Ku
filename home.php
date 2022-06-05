@@ -1,8 +1,9 @@
 <?php 
 session_start();
-if(!isset($_SESSION["user"])) header("Location: login.php");
+include("auth.php");
+include("database.php");
+include("logic.php");
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -52,7 +53,7 @@ if(!isset($_SESSION["user"])) header("Location: login.php");
             <a class="nav-link" href="explore.html">Explore</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="Myblog.html">MyBlog</a>
+            <a class="nav-link" href="Myblog.php">MyBlog</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
@@ -96,7 +97,7 @@ if(!isset($_SESSION["user"])) header("Location: login.php");
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
             <li>
-              <a class="dropdown-item" href="profile.php">My profile</a>
+              <a class="dropdown-item" href="profile.php?id=<?php echo $_SESSION["user"]["id"] ?>">My profile</a>
             </li>
             <li>
               <a class="dropdown-item" href="logout.php">Logout</a>
@@ -105,7 +106,7 @@ if(!isset($_SESSION["user"])) header("Location: login.php");
         </div>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="profile.html" >Welcome, <?php echo $_SESSION["user"]["fullname"] ?></a>
+            <a class="nav-link" href="profile.php?id=<?php echo $_SESSION["user"]["id"] ?>" >Welcome, <?php echo $_SESSION["user"]["fullname"] ?></a>
           </li>
         </ul>
       </div>

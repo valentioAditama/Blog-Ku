@@ -1,3 +1,71 @@
+<?php 
+require_once("logic.php");
+require_once("auth.php");
+// include("database.php");
+ConnectDB();
+session_start();
+if(!isset($_SESSION["user"])) header("Location: login.php");
+
+if (isset($_POST["Buat_blog"])) {
+        // $title = $_POST['title'];
+        // $author = $_POST['author'];
+        // $category = $_POST['category'];
+        // $date = $_POST['date']; 
+        
+        // $video = $_POST['video'];
+
+        // if (!empty($_FILES["thumbnails"]["tmp_name"])) {
+        //     echo "<script>alert('Pilih Gambar dahulu')</script>";
+        // }else if (in_array($imageExt, $ekstensionFIle)) {
+        //     echo "<script>alert('error! Ekstensi yang di Izinkan image .jpg, .jpeg, .png')</script>";
+        // }else if ($_FILES["thumbnails"]["size"] > 10097152) {
+        //     echo "<script>alert('Error, Size gambar terlalu besar!')</script>";
+        // } else{
+        //     if (move_uploaded_file($image, $targetdir.$target_file)) {
+        //             echo "<script>alert('Upload Gambar berhasil')</script>";
+        //         // $sql = "INSERT INTO video (title, author, category, date, thumbnails, video) VALUES ('$title', '$author', '$category', '$date', '$target_file', '$target_filevideo')";
+        //         // global $conn2;
+        //         // $stmt = $conn2->prepare($sql);
+        //         // if ($stmt->execute()) {
+        //         //     echo "<script>alert('Upload Gambar berhasil')</script>";
+        //         // }
+        //     }else{
+        //         echo "<script>alert('Upload Gambar Gagal!!')</script>";
+        //     }
+        // }
+
+    $id_users = filter_input(INPUT_POST, 'id_users', FILTER_SANITIZE_STRING);
+    $judul = filter_input(INPUT_POST, 'judul', FILTER_SANITIZE_STRING);
+    $category = filter_input(INPUT_POST, 'kategori', FILTER_SANITIZE_STRING);
+    $isi = filter_input(INPUT_POST, 'isi', FILTER_SANITIZE_STRING);
+
+    $img_name = $_FILES['thumbnails']['name'];
+    $tmp_img_name = $_FILES['thumbnails']['tmp_name'];
+    $folder = 'upload/'.$img_name;
+    move_uploaded_file($tmp_img_name, $folder);
+
+    $sql = "INSERT INTO blog (id_users, judul, category, isi, thumbnails) VALUES (:id_users, :judul, :category, :isi, :thumbnails)";
+    global $db;
+    $stmt = $db->prepare($sql);
+
+    $params = array(
+      ":id_users" => $id_users,
+      ":judul" => $judul,
+      ":category" => $category, 
+      ":isi" => $isi,
+      ":thumbnails" => $folder
+    );
+
+     $stmt->execute($params);
+
+     if($stmt){
+       echo "<script>alert('Blog Berhasil di buat')</script>";
+     } else {
+       echo "<script>alert('Blog Gagal di Buat')</script>";
+     }
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +73,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore</title>
+    <title>Buat Blog</title>
     <link rel="icon" href="assets/blogging.png">
     <!-- MDB -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
@@ -87,24 +155,26 @@
                 <div class="dropdown">
                     <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                         id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                        <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25"
+                        <img src="assets/profile.png" class="rounded-circle" height="25"
                             alt="Black and White Portrait of a Man" loading="lazy" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                         <li>
-                            <a class="dropdown-item" href="#">My profile</a>
+                            <a class="dropdown-item" href="profile.php?id=<?php echo $_SESSION["user"]["id"] ?>">My
+                                profile</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="#">Settings</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#">Logout</a>
+                            <a class="dropdown-item" href="logout.php">Logout</a>
                         </li>
                     </ul>
                 </div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Welcome, Valentio Aditama</a>
+                        <a class="nav-link" href="profile.php?id=<?php echo $_SESSION["user"]["id"] ?>">Welcome,
+                            <?php echo $_SESSION["user"]["fullname"] ?></a>
                     </li>
                 </ul>
             </div>
@@ -134,32 +204,36 @@
             </div>
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <div class="mt-3 mb-3">
-                        <label for="" class="mb-1">Judul</label>
-                        <input type="text" class=form-control placeholder="Masukan Judul blog kamu disini">
-                    </div>
-                    <div class="mb-3">
-                        <label for="" class="mb-1">Kategori</label>
-                        <select class="form-select" aria-label="Default select example">
-                            <option selected>Pilih kategory Kamu</option>
-                            <option value="1">Teknologi</option>
-                            <option value="2">Fashion</option>
-                            <option value="3">Coding</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="">Thumbnails</label>
-                        <input type="file" class="form-control">
-                    </div>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        <div class="mt-3 mb-3">
+                            <label for="" class="mb-1">Judul</label>
+                            <input type="hidden" class=form-control name="id_users" value="<?= $_SESSION["user"]["id"] ?>" readonly>
+                            <input type="text" name="judul" class=form-control
+                                placeholder="Masukan Judul blog kamu disini" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="" class="mb-1">Kategori</label>
+                            <select class="form-select" name="kategori" aria-label="Default select example" required>
+                                <option value="Teknologi">Teknologi</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Coding">Coding</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="">Thumbnails</label>
+                            <input type="file" name="thumbnails" class="form-control" required>
+                        </div>
                 </div>
                 <div class="col-md-6">
                     <label for="">Isi Blog-mu</label>
-                    <textarea name="" class="form-control" cols="10" rows="10" placeholder="Tuliskan Ide Blog kamu disini yaa "></textarea>
+                    <textarea name="isi" class="form-control" cols="10" rows="10"
+                        placeholder="Tuliskan Ide Blog kamu disini yaa " required></textarea>
                 </div>
             </div>
             <div class="mb-3">
-                <button class="btn btn-success">Upload Sekarang</button>
+                <button class="btn btn-success" type="submit" name="Buat_blog">Upload Sekarang</button>
             </div>
+            </form>
         </div>
     </div>
 
