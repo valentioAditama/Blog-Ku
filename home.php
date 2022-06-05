@@ -3,6 +3,14 @@ session_start();
 include("auth.php");
 include("database.php");
 include("logic.php");
+
+$id = $_SESSION["user"]["id"];
+$showData = $db->query("SELECT * FROM users WHERE id='$id'");
+
+if  (mysqli_num_rows($showData) == 0){ 
+}else{
+    $row = mysqli_fetch_assoc($showData);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -92,7 +100,15 @@ include("logic.php");
         <div class="dropdown">
           <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
             role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-            <img src="assets/profile.png" class="rounded-circle" height="25"
+            <img src="<?php
+                        $photo = $row['profile_images'];
+                        $photo2 = 'uploadProfile/'.$row['profile_images'];
+                        if (file_exists($photo) == FALSE){
+                            echo 'uploadProfile/profile.gif';
+                        }else{
+                            echo $row['profile_images'];
+                        }
+                        ?>" class="rounded-circle" height="25"
               alt="Black and White Portrait of a Man" loading="lazy" />
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">

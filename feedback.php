@@ -1,35 +1,43 @@
 <?php 
-  require_once("logic.php");
-  require_once("auth.php");
-  ConnectDB();
-  session_start();
-  if(!isset($_SESSION["user"])) header("Location: login.php");
+session_start();
+include("auth.php");
+include("database.php");
+include("logic.php");
 
-  if(isset($_POST["feedback"])){
-    $id_users = filter_input(INPUT_POST, 'id_users', FILTER_SANITIZE_STRING);
-    $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
-    $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_STRING);
-    $isi = filter_input(INPUT_POST, 'isi', FILTER_SANITIZE_STRING);
+$id = $_SESSION["user"]["id"];
+$showData = $db->query("SELECT * FROM users WHERE id='$id'");
 
-    $sql = "INSERT INTO feedback (id_users, fullname, category, isi) VALUES (:id_users, :fullname, :category, :isi)";
-    global $db;
-    $stmt = $db->prepare($sql);
+if  (mysqli_num_rows($showData) == 0){ 
+}else{
+    $row = mysqli_fetch_assoc($showData);
+}
 
-    $params = array(
-      ":id_users" => $id_users,
-      ":fullname" => $fullname,
-      ":category" => $category, 
-      ":isi" => $isi
-    );
 
-     $stmt->execute($params);
+if(isset($_POST["feedback"])){
+  $id_users = filter_input(INPUT_POST, 'id_users', FILTER_SANITIZE_STRING);
+  $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
+  $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_STRING);
+  $isi = filter_input(INPUT_POST, 'isi', FILTER_SANITIZE_STRING);
 
-     if($stmt){
-       echo "<script>alert('Feedback Berhasil Dikirim')</script>";
-     } else {
-       echo "<script>alert('Feedback Gagal dikirimkan')</script>";
-     }
-  }
+  $sql = "INSERT INTO feedback (id_users, fullname, category, isi) VALUES (:id_users, :fullname, :category, :isi)";
+  global $db;
+  $stmt = $db->prepare($sql);
+
+  $params = array(
+    ":id_users" => $id_users,
+    ":fullname" => $fullname,
+    ":category" => $category, 
+    ":isi" => $isi
+  );
+
+    $stmt->execute($params);
+
+    if($stmt){
+      echo "<script>alert('Feedback Berhasil Dikirim')</script>";
+    } else {
+      echo "<script>alert('Feedback Gagal dikirimkan')</script>";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,25 +76,25 @@
       <!-- Collapsible wrapper -->
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <!-- Navbar brand -->
-        <a class="navbar-brand mt-2 mt-lg-0" href="#">
+        <a class="navbar-brand mt-2 mt-lg-0" href="home.php">
           <img src="assets/blogging.png" height="30" alt="Blog-ku" />
         </a>
         <!-- Left links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="home.html">Home</a>
+            <a class="nav-link" href="home.php">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="explore.html">Explore</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="Myblog.html">MyBlog</a>
+            <a class="nav-link" href="Myblog.php">MyBlog</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="feedback.html">Feedback</a>
+            <a class="nav-link active" href="feedback.php">Feedback</a>
           </li>
         </ul>
         <!-- Left links -->
@@ -119,7 +127,15 @@
         <div class="dropdown">
           <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
             role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-            <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25"
+            <img src="<?php
+                        $photo = $row['profile_images'];
+                        $photo2 = 'uploadProfile/'.$row['profile_images'];
+                        if (file_exists($photo) == FALSE){
+                            echo 'uploadProfile/profile.gif';
+                        }else{
+                            echo $row['profile_images'];
+                        }
+                        ?>" class="rounded-circle" height="25"
               alt="Black and White Portrait of a Man" loading="lazy" />
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">

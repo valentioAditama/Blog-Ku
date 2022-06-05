@@ -38,13 +38,14 @@ if (isset($_POST["Buat_blog"])) {
     $judul = filter_input(INPUT_POST, 'judul', FILTER_SANITIZE_STRING);
     $category = filter_input(INPUT_POST, 'kategori', FILTER_SANITIZE_STRING);
     $isi = filter_input(INPUT_POST, 'isi', FILTER_SANITIZE_STRING);
+    $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
 
     $img_name = $_FILES['thumbnails']['name'];
     $tmp_img_name = $_FILES['thumbnails']['tmp_name'];
     $folder = 'upload/'.$img_name;
     move_uploaded_file($tmp_img_name, $folder);
 
-    $sql = "INSERT INTO blog (id_users, judul, category, isi, thumbnails) VALUES (:id_users, :judul, :category, :isi, :thumbnails)";
+    $sql = "INSERT INTO blog (id_users, judul, category, isi, thumbnails, Created_at) VALUES (:id_users, :judul, :category, :isi, :thumbnails, :Created_at)";
     global $db;
     $stmt = $db->prepare($sql);
 
@@ -53,13 +54,15 @@ if (isset($_POST["Buat_blog"])) {
       ":judul" => $judul,
       ":category" => $category, 
       ":isi" => $isi,
-      ":thumbnails" => $folder
+      ":thumbnails" => $folder,
+      ":Created_at" => $date
     );
 
      $stmt->execute($params);
 
      if($stmt){
        echo "<script>alert('Blog Berhasil di buat')</script>";
+       header("Location: Myblog.php");
      } else {
        echo "<script>alert('Blog Gagal di Buat')</script>";
      }
@@ -104,25 +107,25 @@ if (isset($_POST["Buat_blog"])) {
             <!-- Collapsible wrapper -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Navbar brand -->
-                <a class="navbar-brand mt-2 mt-lg-0" href="home.html">
+                <a class="navbar-brand mt-2 mt-lg-0" href="home.php">
                     <img src="assets/blogging.png" height="30" alt="Blog-ku" />
                 </a>
                 <!-- Left links -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="home.html">Home</a>
+                        <a class="nav-link" href="home.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="explore.html">Explore</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">MyBlog</a>
+                        <a class="nav-link active" href="Myblog.php">MyBlog</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="feedback.html">Feedback</a>
+                        <a class="nav-link" href="feedback.php">Feedback</a>
                     </li>
                 </ul>
                 <!-- Left links -->
@@ -207,6 +210,7 @@ if (isset($_POST["Buat_blog"])) {
                     <form action="" method="POST" enctype="multipart/form-data">
                         <div class="mt-3 mb-3">
                             <label for="" class="mb-1">Judul</label>
+                            <input type="text" class=form-control name="date" value="<?= date("l"). " " . date("y-m-d") ?>" readonly>
                             <input type="hidden" class=form-control name="id_users" value="<?= $_SESSION["user"]["id"] ?>" readonly>
                             <input type="text" name="judul" class=form-control
                                 placeholder="Masukan Judul blog kamu disini" required>

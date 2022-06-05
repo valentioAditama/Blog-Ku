@@ -1,3 +1,22 @@
+<?php 
+session_start();
+include("auth.php");
+include("database.php");
+include("logic.php");
+
+$id = $_SESSION["user"]["id"];
+$showData = $db->query("SELECT * FROM users WHERE id='$id'");
+
+if  (mysqli_num_rows($showData) == 0){ 
+}else{
+    $row = mysqli_fetch_assoc($showData);
+}
+
+$id_blog = $_GET['id'];
+if(isset($_GET['id'])){
+    $showBlog = $db->query("SELECT * FROM blog INNER JOIN users ON users.id=blog.id_users WHERE id_blog = '$id_blog'");
+    while ($data = mysqli_fetch_assoc($showBlog)) {
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,7 +24,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore</title>
+    <title>Review Blog - <?php echo substr($data['judul'], 0, 50) ?>....</title>
     <link rel="icon" href="assets/blogging.png">
     <!-- MDB -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
@@ -36,16 +55,16 @@
             <!-- Collapsible wrapper -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <!-- Navbar brand -->
-                <a class="navbar-brand mt-2 mt-lg-0" href="home.html">
+                <a class="navbar-brand mt-2 mt-lg-0" href="home.php">
                     <img src="assets/blogging.png" height="30" alt="Blog-ku" />
                 </a>
                 <!-- Left links -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="home.html">Home</a>
+                        <a class="nav-link" href="home.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="explore.html">Explore</a>
+                        <a class="nav-link" href="explore.php">Explore</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="#">MyBlog</a>
@@ -54,7 +73,7 @@
                         <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="feedback.html">Feedback</a>
+                        <a class="nav-link" href="feedback.php">Feedback</a>
                     </li>
                 </ul>
                 <!-- Left links -->
@@ -87,24 +106,33 @@
                 <div class="dropdown">
                     <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                         id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                        <img src="assets/profile.png" class="rounded-circle" height="25"
-                            alt="Black and White Portrait of a Man" loading="lazy" />
+                        <img src="<?php
+                        $photo = $row['profile_images'];
+                        $photo2 = 'uploadProfile/'.$row['profile_images'];
+                        if (file_exists($photo) == FALSE){
+                            echo 'uploadProfile/profile.gif';
+                        }else{
+                            echo $row['profile_images'];
+                        }
+                        ?>" class="rounded-circle" height="25" alt="Black and White Portrait of a Man"
+                            loading="lazy" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                         <li>
-                            <a class="dropdown-item" href="#">My profile</a>
+                            <a class="dropdown-item" href="profile.php?id=<?php echo $row['id']?>">My profile</a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a class="dropdown-item" href="#">Settings</a>
-                        </li>
+                        </li> -->
                         <li>
-                            <a class="dropdown-item" href="#">Logout</a>
+                            <a class="dropdown-item" href="logout.php">Logout</a>
                         </li>
                     </ul>
                 </div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Welcome, Valentio Aditama</a>
+                        <a class="nav-link" href="profile.php?id=<?php echo $row['id']?>">Welcome,
+                            <?php echo $row['fullname']; ?></a>
                     </li>
                 </ul>
             </div>
@@ -117,8 +145,9 @@
             <div class="container-fluid">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="home.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="reviewBlog.html">Review Blog</a></li>
+                        <li class="breadcrumb-item"><a href="home.php">Home</a></li>
+                        <li class="breadcrumb-item"><a href="reviewBlog.php?id=<?php echo $data['id'] ?>">Review
+                                Blog</a></li>
                     </ol>
                 </nav>
             </div>
@@ -132,50 +161,30 @@
                 <div class="col-md-8">
                     <div class="mt-3 mb-3">
                         <div class="row align-items-center">
+                            <div class="mb-2 row align-items-center">
+                                <small><img src="<?php
+                        $photo = $row['profile_images'];
+                        $photo2 = 'uploadProfile/'.$row['profile_images'];
+                        if (file_exists($photo) == FALSE){
+                            echo 'uploadProfile/profile.gif';
+                        }else{
+                            echo $row['profile_images'];
+                        }
+                        ?>" class="rounded-circle" height="25" alt="Black and White Portrait of a Man"
+                                        loading="lazy" /> Author: <?php echo $data['fullname'] ?></small>
+                            </div>
                             <div class="col-md-8">
-                                <h4>Facebook resmi ganti nama menjadi Meta</h4>
-                                <p class="text3">Dibuat Pada Tanggal : Sabtu, 19 januari 2022</p>
+                                <h4><?php echo $data['judul']; ?></h4>
+                                <p class="text3">Dibuat Pada Tanggal : <?php echo $data['Created_at'] ?></p>
                             </div>
                         </div>
                         <div class="row">
-                            <img src="assets/berita6.jpg" class="img-fluid" height="200" alt="">
+                            <img src="<?php echo $data['thumbnails'] ?>" class="img-fluid" height="200" alt="">
                         </div>
                     </div>
                     <div class="row">
                         <div class="mb-3">
-                            <p class="text4"><b>Blog-ku</b> - Founder Facebook Mark Zuckerberg mengumumkan mengganti
-                                nama
-                                Facebook Inc.. menjadi Meta pada Kamis, (28/10/2021).
-
-                                Mark Zuckerberg menyampaikannya dalam Konferensi tahunan Facebook Connect 2021.
-
-                                Ia menuturkan, penggantian nama dari Facebook Inc.. menjadi Meta, merupakan perwujudan
-                                ambisinya
-                                yang ingin membangun "Metaverse", sebuah realitas baru yang akan mengaburkan batas
-                                antara dunia
-                                fisik dan dunia virtual.
-                                <br>
-                                <br>
-                                Artikel ini telah tayang di TribunManado.co.id dengan judul Facebook Ganti Nama jadi
-                                'Meta',
-                                Mark Zuckerberg Ungkap Ambisi dan Alasannya,
-                                https://manado.tribunnews.com/2021/10/31/facebook-ganti-nama-jadi-meta-mark-zuckerberg-ungkap-ambisi-dan-alasannya.
-
-                                Lalu, setelah penggantian nama perusahaan induk ini, apa yang terjadi dengan media-media
-                                sosial
-                                di bawahnya?
-                                <br>
-                                <br>
-                                Sebagaimana diberitakan Kompas.com, Jumat (29/10/2021), Zuckerberg menjelaskan,
-                                perubahan nama
-                                ini hanya berlaku untuk induk perusahaan saja yakni Facebook Inc..
-
-                                Artikel ini telah tayang di TribunManado.co.id dengan judul Facebook Ganti Nama jadi
-                                'Meta',
-                                Mark Zuckerberg Ungkap Ambisi dan Alasannya,
-                                https://manado.tribunnews.com/2021/10/31/facebook-ganti-nama-jadi-meta-mark-zuckerberg-ungkap-ambisi-dan-alasannya.
-
-                            </p>
+                            <p class="text4"><b>Blog-ku</b>- <?php echo $data['isi']; ?></p>
                         </div>
                     </div>
                 </div>
@@ -254,9 +263,9 @@
                     <p class="text4">Tulisakan Komentarmu disini </p>
                     <textarea name="" class="form-control" id="" cols="10" rows="5"
                         placeholder="Masukan Komentarmu yuk disini"></textarea>
-                        <div class="mt-3">
-                            <button class="btn btn-primary container">Kirim Komentar</button>
-                        </div>
+                    <div class="mt-3">
+                        <button class="btn btn-primary container">Kirim Komentar</button>
+                    </div>
                 </div>
                 <div class="mt-3 mb-3">
                     <div class="row shadow-4-strong rounded p-3">
@@ -283,3 +292,4 @@
 </body>
 
 </html>
+<?php } } ?>

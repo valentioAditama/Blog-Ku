@@ -92,19 +92,19 @@ if (isset($_POST["ganti_photo"])){
                 <!-- Left links -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="home.html">Home</a>
+                        <a class="nav-link" href="home.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="explore.html">Explore</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">MyBlog</a>
+                        <a class="nav-link active" href="Myblog.php">MyBlog</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="feedback.html">Feedback</a>
+                        <a class="nav-link" href="feedback.php">Feedback</a>
                     </li>
                 </ul>
                 <!-- Left links -->
@@ -137,7 +137,15 @@ if (isset($_POST["ganti_photo"])){
                 <div class="dropdown">
                     <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#"
                         id="navbarDropdownMenuAvatar" role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                        <img src="assets/profile.png" class="rounded-circle" height="25"
+                        <img src="<?php
+                        $photo = $row['profile_images'];
+                        $photo2 = 'uploadProfile/'.$row['profile_images'];
+                        if (file_exists($photo) == FALSE){
+                            echo 'uploadProfile/profile.gif';
+                        }else{
+                            echo $row['profile_images'];
+                        }
+                        ?>" class="rounded-circle" height="25"
                             alt="Black and White Portrait of a Man" loading="lazy" />
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
@@ -189,7 +197,7 @@ if (isset($_POST["ganti_photo"])){
                         $photo = $row['profile_images'];
                         $photo2 = 'uploadProfile/'.$row['profile_images'];
                         if (file_exists($photo) == FALSE){
-                            echo 'uploadProfile/profile.png';
+                            echo 'uploadProfile/profile.gif';
                         }else{
                             echo $row['profile_images'];
                         }
