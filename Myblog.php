@@ -165,11 +165,11 @@ if  (mysqli_num_rows($showData) == 0){
         <div class="col-md-3">
           <div class="card">
             <a href="reviewBlog.php?id=<?php echo $data['id_blog']?>">
-              <img src="<?php echo $data['thumbnails'] ?>" class="card-img-top" alt="Fissure in Sandstone" />
+              <img src="<?php echo $data['thumbnails'] ?>" class="card-img-top" height="145" alt="Fissure in Sandstone" />
             </a>
             <div class="card-body">
-              <h5 class="card-title"><?php echo substr($data['judul'], 0, 40) ?>...</h5>
-              <p class="card-text"><?php echo substr($data['isi'], 0, 40); ?>...</p>
+              <h5 class="card-title"><?php echo substr($data['judul'], 0, 35) ?>...</h5>
+              <p class="card-text"><?php echo substr($data['isi'], 0, 30); ?>...</p>
               <div class="row">
                 <div class="col-md-4">
                   <a href="editBlog.php?id_edit=<?php echo $data['id_blog']; ?>" class="btn btn-md btn-success">Edit</a>

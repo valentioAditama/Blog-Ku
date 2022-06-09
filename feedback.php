@@ -12,31 +12,20 @@ if  (mysqli_num_rows($showData) == 0){
     $row = mysqli_fetch_assoc($showData);
 }
 
-
 if(isset($_POST["feedback"])){
-  $id_users = filter_input(INPUT_POST, 'id_users', FILTER_SANITIZE_STRING);
-  $fullname = filter_input(INPUT_POST, 'fullname', FILTER_SANITIZE_STRING);
-  $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_STRING);
-  $isi = filter_input(INPUT_POST, 'isi', FILTER_SANITIZE_STRING);
+  $id_users = $_POST['id_users'];
+  $fullname = $_POST['fullname'];
+  $category = $_POST['category'];
+  $isi = $_POST['isi'];
+  $created_at = $_POST['date'];
 
-  $sql = "INSERT INTO feedback (id_users, fullname, category, isi) VALUES (:id_users, :fullname, :category, :isi)";
-  global $db;
-  $stmt = $db->prepare($sql);
-
-  $params = array(
-    ":id_users" => $id_users,
-    ":fullname" => $fullname,
-    ":category" => $category, 
-    ":isi" => $isi
-  );
-
-    $stmt->execute($params);
-
-    if($stmt){
-      echo "<script>alert('Feedback Berhasil Dikirim')</script>";
-    } else {
-      echo "<script>alert('Feedback Gagal dikirimkan')</script>";
-    }
+  $sql = "INSERT INTO feedback (id_users, fullname, category, isi, Created_at) VALUES ($id_users, $fullname, $category, $isi, $created_at)";
+  $result = mysqli_query($db, $sql);
+  if ($result){
+    echo "<script>alert('Terima kasih atas Feedbacknya')</script>";
+  }else{
+    echo "<script>alert('Feedback gagal dikirim')</script>";  
+  }
 }
 ?>
 <!DOCTYPE html>
@@ -140,13 +129,10 @@ if(isset($_POST["feedback"])){
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
             <li>
-              <a class="dropdown-item" href="#">My profile</a>
+              <a class="dropdown-item" href="profile.php?id=<?php echo $row['id'] ?>">My profile</a>
             </li>
             <li>
-              <a class="dropdown-item" href="#">Settings</a>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#">Logout</a>
+              <a class="dropdown-item" href="logout.php">Logout</a>
             </li>
           </ul>
         </div>
@@ -165,7 +151,7 @@ if(isset($_POST["feedback"])){
       <div class="container-fluid">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">FeedBack /</a></li>
+            <li class="breadcrumb-item"><a href="feedback.php">FeedBack /</a></li>
           </ol>
         </nav>
       </div>
@@ -185,6 +171,7 @@ if(isset($_POST["feedback"])){
               <label for="username">Fullname</label>
               <input type="text" name="id_users" class="form-control" readonly value="<?= $_SESSION["user"]["id"] ?>" hidden>
               <input type="text" name="fullname" class="form-control" readonly value="<?= $_SESSION["user"]["fullname"] ?>">
+              <input type="hidden" name="date" class="form-control" readonly value="<?= date("l"). " " . date("y-m-d") ?>">
             </div>
             <div class="mb-3">
               <label for="Category">Category</label>

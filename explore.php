@@ -55,10 +55,10 @@ if  (mysqli_num_rows($showData) == 0){
         <!-- Left links -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="home.html">Home</a>
+            <a class="nav-link" href="home.php">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="explore.html">Explore</a>
+            <a class="nav-link active" href="explore.php">Explore</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="Myblog.php">MyBlog</a>
@@ -67,7 +67,7 @@ if  (mysqli_num_rows($showData) == 0){
             <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="feedback.html">Feedback</a>
+            <a class="nav-link" href="feedback.php">Feedback</a>
           </li>
         </ul>
         <!-- Left links -->
@@ -108,8 +108,8 @@ if  (mysqli_num_rows($showData) == 0){
                         }else{
                             echo $row['profile_images'];
                         }
-                        ?>" class="rounded-circle" height="25"
-                            alt="Black and White Portrait of a Man" loading="lazy" />
+                        ?>" class="rounded-circle" height="25" alt="Black and White Portrait of a Man"
+              loading="lazy" />
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
             <li>
@@ -125,7 +125,8 @@ if  (mysqli_num_rows($showData) == 0){
         </div>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="profile.php?id=<?php echo $row['id'] ?>">Welcome, <?php echo $row['fullname'] ?></a>
+            <a class="nav-link" href="profile.php?id=<?php echo $row['id'] ?>">Welcome,
+              <?php echo $row['fullname'] ?></a>
           </li>
         </ul>
       </div>
@@ -153,55 +154,25 @@ if  (mysqli_num_rows($showData) == 0){
         <h3>Blog Topics Teknologi Terbaru</h3>
         <p3>Mengenai Seputar Teknologi pada minggu ini</p3>
       </div>
-      <div class="row">
+      <div class="row mb-4">
+        <?php 
+        $showBlog = $db->query("SELECT * FROM blog WHERE category = 'Teknologi' ORDER BY id_blog DESC LIMIT 4");
+        while ($data = mysqli_fetch_assoc($showBlog)) {
+        ?>
         <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
+            <a href="reviewBlog.php?id=<?php echo $data['id_blog'] ?>">
+              <img src="<?php echo $data['thumbnails'] ?>" class="card-img-top" height="145"
+                alt="Fissure in Sandstone" />
+            </a>
             <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
+              <h5 class="card-title"><?php echo substr($data['judul'], 0, 35) ?>...</h5>
+              <p class="card-text"><?php echo substr($data['isi'], 0, 30); ?>...</p>
+              <a href="reviewBlog.php?id=<?php echo $data['id_blog'] ?>" class="btn btn-primary">Lihat Blog</a>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
+        <?php } ?>
       </div>
     </div>
   </div>
@@ -209,119 +180,60 @@ if  (mysqli_num_rows($showData) == 0){
   <div class="mt-4">
     <div class="container">
       <div class="mt-3 mb-3">
-        <h3>Blog Topics Fashion</h3>
-        <p3>Mengenai Seputar Fashion Show  pada minggu ini</p3>
+        <h3>Blog Topics Tutorial</h3>
+        <p3>Mengenai Seputar Tutorial Show pada minggu ini</p3>
       </div>
       <div class="row">
-        <div class="col-md-3">
+      <?php 
+        $showBlog = $db->query("SELECT * FROM blog WHERE category = 'Tutorial' ORDER BY id_blog DESC");
+        while ($data2 = mysqli_fetch_assoc($showBlog)) {
+        ?>
+       <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
+            <a href="reviewBlog.php?id=<?php echo $data2['id_blog'] ?>">
+              <img src="<?php echo $data2['thumbnails'] ?>" class="card-img-top" height="145"
+                alt="Fissure in Sandstone" />
+            </a>
             <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
+              <h5 class="card-title"><?php echo substr($data2['judul'], 0, 35) ?>...</h5>
+              <p class="card-text"><?php echo substr($data2['isi'], 0, 30); ?>...</p>
+              <a href="reviewBlog.php?id=<?php echo $data2['id_blog'] ?>" class="btn btn-primary">Lihat Blog</a>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
+        <?php } ?>
       </div>
     </div>
   </div>
 
   <div class="mt-4">
     <div class="container">
-      <div class="mt-3 mb-3">
-        <h3>Blog Topics Coding Challange</h3>
-        <p3>Mengenai Seputar Coding Challange pada minggu ini</p3>
+      <div class="mt-5 mb-3">
+        <h3>Blog Topics Coding Terbaru</h3>
+        <p3>Mengenai Seputar Coding pada minggu ini</p3>
       </div>
-      <div class="row">
+      <div class="row mb-4">
+        <?php 
+        $showBlog = $db->query("SELECT * FROM blog WHERE category = 'Coding' ORDER BY id_blog DESC LIMIT 4");
+        while ($data2 = mysqli_fetch_assoc($showBlog)) {
+        ?>
         <div class="col-md-3">
           <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
+            <a href="reviewBlog.php?id=<?php echo $data2['id_blog'] ?>">
+              <img src="<?php echo $data2['thumbnails'] ?>" class="card-img-top" height="145"
+                alt="Fissure in Sandstone" />
+            </a>
             <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
+              <h5 class="card-title"><?php echo substr($data2['judul'], 0, 35) ?>...</h5>
+              <p class="card-text"><?php echo substr($data2['isi'], 0, 30); ?>...</p>
+              <a href="reviewBlog.php?id=<?php echo $data2['id_blog'] ?>" class="btn btn-primary">Lihat Blog</a>
             </div>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card">
-            <img src="https://mdbcdn.b-cdn.net/img/new/standard/nature/184.webp" class="card-img-top"
-              alt="Fissure in Sandstone" />
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-                content.</p>
-              <a href="#!" class="btn btn-primary">Button</a>
-            </div>
-          </div>
-        </div>
+        <?php } ?>
       </div>
     </div>
+  </div>
   </div>
 
   <script>

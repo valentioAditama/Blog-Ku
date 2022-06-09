@@ -219,7 +219,7 @@ if (isset($_POST["Buat_blog"])) {
                             <label for="" class="mb-1">Kategori</label>
                             <select class="form-select" name="kategori" aria-label="Default select example" required>
                                 <option value="Teknologi">Teknologi</option>
-                                <option value="Fashion">Fashion</option>
+                                <option value="Tutorial">Tutorial</option>
                                 <option value="Coding">Coding</option>
                             </select>
                         </div>
