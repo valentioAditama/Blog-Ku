@@ -58,7 +58,7 @@ if  (mysqli_num_rows($showData) == 0){
             <a class="nav-link" href="home.php">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="explore.html">Explore</a>
+            <a class="nav-link" href="explore.php">Explore</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" href="#">MyBlog</a>
@@ -119,7 +119,7 @@ if  (mysqli_num_rows($showData) == 0){
               <a class="dropdown-item" href="#">Settings</a>
             </li>
             <li>
-              <a class="dropdown-item" href="#">Logout</a>
+              <a class="dropdown-item" href="logout.php">Logout</a>
             </li>
           </ul>
         </div>
@@ -156,10 +156,9 @@ if  (mysqli_num_rows($showData) == 0){
       <div class="mt-3 mb-3">
         <a href="buatBlog.php" class="btn btn-success">Buat Blog-ku ✍️</a>
       </div>
-      <div class="row">
+      <div class="row mb-5">
         <?php 
-        $showBlog = $db->query("SELECT * FROM blog");
-
+        $showBlog = $db->query("SELECT * FROM blog WHERE id_users = '$id'");
         while ($data = mysqli_fetch_assoc($showBlog)) {
         
         ?>
@@ -170,14 +169,39 @@ if  (mysqli_num_rows($showData) == 0){
             </a>
             <div class="card-body">
               <h5 class="card-title"><?php echo substr($data['judul'], 0, 40) ?>...</h5>
-              <p class="card-text"><?php echo substr($data['isi'], 0, 20); ?>...</p>
+              <p class="card-text"><?php echo substr($data['isi'], 0, 40); ?>...</p>
               <div class="row">
                 <div class="col-md-4">
-                  <a href="#!" class="btn btn-md btn-success">Edit</a>
+                  <a href="editBlog.php?id_edit=<?php echo $data['id_blog']; ?>" class="btn btn-md btn-success">Edit</a>
                 </div>
                 <div class="col-md-4">
-                  <a href="#!" class="btn btn-md btn-danger">Hapus</a>
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Hapus
+                  </button>
                 </div>
+
+                <!-- Modal -->
+                <div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Hapus Blog?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        Apakah kamu yakin ingin Hapus?
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                        <a href="hapusBlog.php?hapus=<?php echo $data['id_blog'] ?>">
+                          <button type="button" class="btn btn-danger">Hapus sekarang</button>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -186,6 +210,13 @@ if  (mysqli_num_rows($showData) == 0){
       </div>
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+    integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk" crossorigin="anonymous">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.min.js"
+    integrity="sha384-kjU+l4N0Yf4ZOJErLsIcvOU2qSb74wXpOhqTvwVx3OElZRweTnQ6d31fXEoRD1Jy" crossorigin="anonymous">
+  </script>
 
   <script>
     AOS.init();

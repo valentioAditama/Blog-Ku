@@ -1,6 +1,16 @@
 <?php 
 session_start();
-if(!isset($_SESSION["user"])) header("Location: login.php");
+include("auth.php");
+include("database.php");
+include("logic.php");
+$id = $_SESSION["user"]["id"];
+$showData = $db->query("SELECT * FROM users WHERE id='$id'");
+
+if  (mysqli_num_rows($showData) == 0){ 
+}else{
+    $row = mysqli_fetch_assoc($showData);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,7 +61,7 @@ if(!isset($_SESSION["user"])) header("Location: login.php");
             <a class="nav-link active" href="explore.html">Explore</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="Myblog.html">MyBlog</a>
+            <a class="nav-link" href="Myblog.php">MyBlog</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
@@ -90,24 +100,32 @@ if(!isset($_SESSION["user"])) header("Location: login.php");
         <div class="dropdown">
           <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
             role="button" data-mdb-toggle="dropdown" aria-expanded="false">
-            <img src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp" class="rounded-circle" height="25"
-              alt="Black and White Portrait of a Man" loading="lazy" />
+            <img src="<?php
+                        $photo = $row['profile_images'];
+                        $photo2 = 'uploadProfile/'.$row['profile_images'];
+                        if (file_exists($photo) == FALSE){
+                            echo 'uploadProfile/profile.gif';
+                        }else{
+                            echo $row['profile_images'];
+                        }
+                        ?>" class="rounded-circle" height="25"
+                            alt="Black and White Portrait of a Man" loading="lazy" />
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
             <li>
-              <a class="dropdown-item" href="#">My profile</a>
+              <a class="dropdown-item" href="profile.php?id=<?php echo $row['id'] ?>">My profile</a>
             </li>
-            <li>
+            <!-- <li>
               <a class="dropdown-item" href="#">Settings</a>
-            </li>
+            </li> -->
             <li>
-              <a class="dropdown-item" href="#">Logout</a>
+              <a class="dropdown-item" href="logout.php">Logout</a>
             </li>
           </ul>
         </div>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="#">Welcome, Valentio Aditama</a>
+            <a class="nav-link" href="profile.php?id=<?php echo $row['id'] ?>">Welcome, <?php echo $row['fullname'] ?></a>
           </li>
         </ul>
       </div>

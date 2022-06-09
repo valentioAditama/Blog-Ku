@@ -58,7 +58,7 @@ require_once "logic.php";
                                 </div>
                             </div>
                             <div class="col-md-6 text-end">
-                                <a href="login.html">Punya Akun?</a>
+                                <a href="login.php">Punya Akun?</a>
                             </div>
                         </div>
                     </div>

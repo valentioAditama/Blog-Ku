@@ -1,12 +1,29 @@
-<?php 
-require_once("logic.php");
-require_once("auth.php");
-// include("database.php");
-ConnectDB();
+<?php
 session_start();
+include("auth.php");
+include("database.php");
+include("logic.php");
+
 if(!isset($_SESSION["user"])) header("Location: login.php");
 
-if (isset($_POST["Buat_blog"])) {
+if(isset($_POST["ganti_thumbnails"])){
+    $img_name = $_FILES['thumbnails']['name'];
+    $tmp_img_name = $_FILES['thumbnails']['tmp_name'];
+    $folder = 'upload/'.$img_name;
+    move_uploaded_file($tmp_img_name, $folder);
+
+    $id_blog = $_POST["id_blog"];
+    $sql = "UPDATE blog SET thumbnails='$folder' WHERE id_blog='$id_blog'";
+    $result = mysqli_query($db, $sql);
+    if($result){
+        echo "<script>alert('Update Thumbnails berhasil di Ubah!');</script>";
+        echo "<script>window.location.href = window.location.href;</script>";
+    } else { 
+        echo "<script>alert('Thumbnails gagal di ubah')</script>";
+    }
+}
+
+if (isset($_POST["Edit_blog"])) {
         // $title = $_POST['title'];
         // $author = $_POST['author'];
         // $category = $_POST['category'];
@@ -34,40 +51,27 @@ if (isset($_POST["Buat_blog"])) {
         //     }
         // }
 
-    $id_users = filter_input(INPUT_POST, 'id_users', FILTER_SANITIZE_STRING);
-    $judul = filter_input(INPUT_POST, 'judul', FILTER_SANITIZE_STRING);
-    $category = filter_input(INPUT_POST, 'kategori', FILTER_SANITIZE_STRING);
-    $isi = filter_input(INPUT_POST, 'isi', FILTER_SANITIZE_STRING);
-    $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
+    $id_users = $_POST["id_user"];;
+    $id_blog = $_POST["id_blog"];
+    $judul = $_POST["judul"];
+    $category = $_POST["kategori"];
+    $isi = $_POST["isi"];
+    $date = $_POST["date"];
 
-    $img_name = $_FILES['thumbnails']['name'];
-    $tmp_img_name = $_FILES['thumbnails']['tmp_name'];
-    $folder = 'upload/'.$img_name;
-    move_uploaded_file($tmp_img_name, $folder);
-
-    $sql = "INSERT INTO blog (id_users, judul, category, isi, thumbnails, Created_at) VALUES (:id_users, :judul, :category, :isi, :thumbnails, :Created_at)";
-    global $db;
-    $stmt = $db->prepare($sql);
-
-    $params = array(
-      ":id_users" => $id_users,
-      ":judul" => $judul,
-      ":category" => $category, 
-      ":isi" => $isi,
-      ":thumbnails" => $folder,
-      ":Created_at" => $date
-    );
-
-     $stmt->execute($params);
-
-     if($stmt){
-       echo "<script>alert('Blog Berhasil di buat')</script>";
-       header("Location: Myblog.php");
-     } else {
-       echo "<script>alert('Blog Gagal di Buat')</script>";
-     }
+    $sql = "UPDATE blog SET id_users='$id_users', judul='$judul', category='$category', isi='$isi', Created_at='$date' WHERE id_blog='$id_blog'";
+    $result = mysqli_query($db, $sql);
+    if($result){
+        echo "<script>alert('Update Blog berhasil di Ubah!');</script>";
+        echo "<script>window.location.href = window.location.href;</script>";
+    } else { 
+        echo "<script>alert('Blog anda sudah paling Update')</script>";
+    }
 }
 
+$id_blog = $_GET['id_edit'];
+if(isset($_GET['id_edit'])){
+    $showBlog = $db->query("SELECT * FROM blog INNER JOIN users ON users.id=blog.id_users WHERE id_blog = '$id_blog'");
+    while ($data = mysqli_fetch_assoc($showBlog)) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,7 +80,7 @@ if (isset($_POST["Buat_blog"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Blog</title>
+    <title>Edit Blog</title>
     <link rel="icon" href="assets/blogging.png">
     <!-- MDB -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
@@ -190,8 +194,9 @@ if (isset($_POST["Buat_blog"])) {
             <div class="container-fluid">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="Myblog.html">MyBlog</a></li>
-                        <li class="breadcrumb-item"><a href="buatBlog.html">Buat Blog</a></li>
+                        <li class="breadcrumb-item"><a href="Myblog.php">MyBlog</a></li>
+                        <li class="breadcrumb-item"><a href="editBlog.php?id_edit=<?php echo $data['id_blog'] ?>">Edit
+                                Blog</a></li>
                     </ol>
                 </nav>
             </div>
@@ -202,17 +207,21 @@ if (isset($_POST["Buat_blog"])) {
     <div class="mt-4">
         <div class="container p-3 shadow-5 rounded-lg">
             <div class="mt-3 mb-3">
-                <h3>Kembangkan ide kamu di bawah ini</h3>
+                <h3>Edit Blog-mu yuk, Agar terlihat fresh</h3>
                 <p3>Hasilkan ide terbaik-mu dengan versimu disini!</p3>
             </div>
             <div class="row align-items-center">
                 <div class="col-md-6">
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="" method="POST">
                         <div class="mt-3 mb-3">
                             <label for="" class="mb-1">Judul</label>
-                            <input type="hidden" class=form-control name="date" value="<?= date("l"). " " . date("y-m-d") ?>" readonly>
-                            <input type="hidden" class=form-control name="id_users" value="<?= $_SESSION["user"]["id"] ?>" readonly>
-                            <input type="text" name="judul" class=form-control
+                            <input type="hidden" class=form-control name="date"
+                                value="<?= date("l"). " " . date("y-m-d") ?>" readonly>
+                            <input type="hidden" class="form-control" name="id_blog"
+                                value="<?php echo $data["id_blog"] ?>" readonly>
+                            <input type="hidden" class=form-control name="id_user" value="<?= $data["id_users"] ?>"
+                                readonly>
+                            <input type="text" name="judul" class=form-control value="<?php echo $data["judul"] ?>"
                                 placeholder="Masukan Judul blog kamu disini" required>
                         </div>
                         <div class="mb-3">
@@ -224,20 +233,32 @@ if (isset($_POST["Buat_blog"])) {
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="">Thumbnails</label>
-                            <input type="file" name="thumbnails" class="form-control" required>
+                            <label for="" class="mb-1">Isi Blog-mu</label>
+                            <textarea name="isi" class="form-control" cols="10" rows="10"
+                                placeholder="Tuliskan Ide Blog kamu disini yaa "
+                                required><?php echo $data['isi']; ?></textarea>
                         </div>
+                        <div class="mb-3">
+                            <button class="btn btn-success" type="submit" name="Edit_blog">Edit Blog</button>
+                        </div>
+                    </form>
                 </div>
                 <div class="col-md-6">
-                    <label for="">Isi Blog-mu</label>
-                    <textarea name="isi" class="form-control" cols="10" rows="10"
-                        placeholder="Tuliskan Ide Blog kamu disini yaa " required></textarea>
+                    <div class="mb-2">Thumbnails</div>
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        <center>
+                            <div class="mb-2">
+                            <input type="hidden" class=form-control name="id_blog" value="<?= $data["id_blog"] ?>" readonly>
+                                <img src="<?php echo $data['thumbnails'] ?>" class="img-fluid" alt="">
+                            </div>
+                        </center>
+                        <input type="file" name="thumbnails" class="form-control" required>
+                        <div class="mt-3 mb-3">
+                            <button type="submit" class="btn btn-primary container" name="ganti_thumbnails">Ganti thumbnails</button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="mb-3">
-                <button class="btn btn-success" type="submit" name="Buat_blog">Upload Sekarang</button>
-            </div>
-            </form>
         </div>
     </div>
 
@@ -247,3 +268,5 @@ if (isset($_POST["Buat_blog"])) {
 </body>
 
 </html>
+
+<?php }}?>

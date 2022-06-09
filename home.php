@@ -58,7 +58,7 @@ if  (mysqli_num_rows($showData) == 0){
             <a class="nav-link active" href="home.php">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="explore.html">Explore</a>
+            <a class="nav-link" href="explore.php">Explore</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="Myblog.php">MyBlog</a>
