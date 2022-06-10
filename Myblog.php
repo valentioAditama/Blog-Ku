@@ -67,7 +67,7 @@ if  (mysqli_num_rows($showData) == 0){
             <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="feedback.html">Feedback</a>
+            <a class="nav-link" href="feedback.php">Feedback</a>
           </li>
         </ul>
         <!-- Left links -->

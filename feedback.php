@@ -1,8 +1,6 @@
 <?php 
-session_start();
-include("auth.php");
-include("database.php");
-include("logic.php");
+require("auth.php");
+require("database.php");
 
 $id = $_SESSION["user"]["id"];
 $showData = $db->query("SELECT * FROM users WHERE id='$id'");
@@ -12,19 +10,19 @@ if  (mysqli_num_rows($showData) == 0){
     $row = mysqli_fetch_assoc($showData);
 }
 
-if(isset($_POST["feedback"])){
+if(isset($_POST['kirim_feedback'])){
   $id_users = $_POST['id_users'];
   $fullname = $_POST['fullname'];
-  $category = $_POST['category'];
+  $category = $_POST['kategori'];
   $isi = $_POST['isi'];
-  $created_at = $_POST['date'];
+  $Created_at = $_POST['date'];
 
-  $sql = "INSERT INTO feedback (id_users, fullname, category, isi, Created_at) VALUES ($id_users, $fullname, $category, $isi, $created_at)";
-  $result = mysqli_query($db, $sql);
-  if ($result){
-    echo "<script>alert('Terima kasih atas Feedbacknya')</script>";
+  $sql = "INSERT INTO feedback (id_users, fullname, category, isi, Created_at) VALUES ('$id_users', '$fullname', '$category', '$isi', '$Created_at')";
+  
+  if(mysqli_query($db, $sql)){
+    echo "<script>alert('Terima kasih sudah memeberikan Feedback!')</script>";
   }else{
-    echo "<script>alert('Feedback gagal dikirim')</script>";  
+    echo "<script>alert('Gagal terkirim!')</script>" . $sql . "<br>" . mysqli_error($db);
   }
 }
 ?>
@@ -138,7 +136,7 @@ if(isset($_POST["feedback"])){
         </div>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="#">Welcome, <?php echo $_SESSION["user"]["fullname"] ?></a>
+            <a class="nav-link" href="profile.php?id=<?php echo $row['id'] ?>">Welcome, <?php echo $row["fullname"] ?></a>
           </li>
         </ul>
       </div>
@@ -169,13 +167,13 @@ if(isset($_POST["feedback"])){
           <form action="" method="POST">
             <div class="mb-3">
               <label for="username">Fullname</label>
-              <input type="text" name="id_users" class="form-control" readonly value="<?= $_SESSION["user"]["id"] ?>" hidden>
-              <input type="text" name="fullname" class="form-control" readonly value="<?= $_SESSION["user"]["fullname"] ?>">
-              <input type="hidden" name="date" class="form-control" readonly value="<?= date("l"). " " . date("y-m-d") ?>">
+              <input type="hidden" name="id_users" class="form-control" readonly value="<?php echo $row['id'] ?>">
+              <input type="text" name="fullname" class="form-control" readonly value="<?php echo $row['fullname']  ?>" required>
+              <input type="hidden" name="date" class="form-control" readonly value="<?php echo date("l"). " " . date("y-m-d") ?>">
             </div>
             <div class="mb-3">
               <label for="Category">Category</label>
-              <select id="Category" name="category" class="form-select" aria-label="Default select example">
+              <select id="Category" name="kategori" class="form-select" aria-label="Default select example" required>
                 <option value="Bugs">Bugs</option>
                 <option value="Comment">Comment</option>
                 <option value="Other">Other</option>
@@ -183,10 +181,10 @@ if(isset($_POST["feedback"])){
             </div>
             <div class="mb-3">
               <label for="describe">Isi</label>
-              <textarea name="isi" class="form-control" id="" cols="10" rows="5" placeholder="Masukan ide atau lainnya kamu disini yuk"></textarea>
+              <textarea name="isi" class="form-control" id="" cols="10" rows="5" placeholder="Masukan ide atau lainnya kamu disini yuk" required></textarea>
             </div>
             <div class="mb-3">
-              <button class="btn btn-success container" type="submit" name="feedback">Submit</button>
+              <button class="btn btn-success container" name="kirim_feedback" type="submit">Submit</button>
             </div>
           </form>
         </div>

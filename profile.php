@@ -98,7 +98,7 @@ if (isset($_POST["ganti_photo"])){
                         <a class="nav-link" href="explore.html">Explore</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="Myblog.php">MyBlog</a>
+                        <a class="nav-link" href="Myblog.php">MyBlog</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="https://valentioaditama.github.io/ValentioAditama/">About Us</a>
@@ -205,7 +205,7 @@ if (isset($_POST["ganti_photo"])){
                         <form action="" method="POST" enctype="multipart/form-data">
                             <div class="mt-3 mb-3">
                                 <input type="hidden" name="id_users" value="<?php echo $_SESSION['user']['id'] ?>" >
-                                <input type="file" name="thumbnails" class="form-control">
+                                <input type="file" name="thumbnails" class="form-control" required>
                                 <div class="mt-3">
                                     <button class="btn btn-primary container" name="ganti_photo" type="submit">Ganti Photo</button>
                                 </div>
