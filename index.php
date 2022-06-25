@@ -22,6 +22,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/typeit@8.6.0/dist/index.umd.js"></script>
 
 </head>
 
@@ -34,8 +35,8 @@
             <img data-aos="zoom-in-down" data-aos-duration="2000" src="assets/20860-person-on-laptop-working-on-laptop.gif" class="img-fluid" alt="" srcset="">
           </div>
           <div class="col-md-6" data-aos="zoom-in-left" data-aos-duration="2000">
-            <h1>Selamat Datang di Blog-ku</h1>
-          <p class="text1">Share yuk ide dan cerita kalian ke orang-orang! agar teman dan kerabatmu tau </p>
+            <h1 id="myElement"><span id="myElement"></span></h1>
+            <p class="text1">Share yuk ide dan cerita kalian ke orang-orang! agar teman dan kerabatmu tau </p>
           </div>
         </div>
       </div>
@@ -107,6 +108,13 @@
 
     //methods
     fullpage_api.setAllowScrolling(true);
+    
+    new TypeIt("#myElement", {
+  strings: "Selamat Datang di Blog-ku!",
+  speed: 100,
+  loop: true,
+}).go();
+
   </script>
 </body>
 

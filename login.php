@@ -83,7 +83,7 @@ if(isset($_POST['login'])){
                     <div class="mb-3">
                         <div class="row">
                             <div class="col-md-6">
-                                <a href="forgotPassword.html" class="">Forgot Password?</a>
+                                <a href="forgotPassword.php" class="">Forgot Password?</a>
                             </div>
                             <div class="col-md-6 text-end">
                                 <a href="register.php">Register Account</a>
