@@ -6,13 +6,18 @@ include("logic.php");
 
 $id = $_SESSION["user"]["id"];
 $showData = $db->query("SELECT * FROM users WHERE id='$id'");
-
 if  (mysqli_num_rows($showData) == 0){ 
 }else{
     $row = mysqli_fetch_assoc($showData);
 }
 
-$id_blog = $_GET['id'];
+$id_blog = $_GET["id"];
+$show_blog = $db->query("SELECT * FROM blog WHERE id_blog='$id_blog' ");
+if (mysqli_num_rows($show_blog) == 0) {
+}else{
+    $row2 = mysqli_fetch_assoc($show_blog);
+}
+
 if(isset($_GET['id'])){
     $showBlog = $db->query("SELECT * FROM blog INNER JOIN users ON users.id=blog.id_users WHERE id_blog = '$id_blog'");
     while ($data = mysqli_fetch_assoc($showBlog)) {
@@ -163,19 +168,19 @@ if(isset($_GET['id'])){
                         <div class="row align-items-center">
                             <div class="mb-2 row align-items-center">
                                 <small><img src="<?php
-                        $photo = $row['profile_images'];
+                        $photo = $data['profile_images'];
                         $photo2 = 'uploadProfile/'.$row['profile_images'];
                         if (file_exists($photo) == FALSE){
                             echo 'uploadProfile/profile.gif';
                         }else{
-                            echo $row['profile_images'];
+                            echo $data['profile_images'];
                         }
                         ?>" class="rounded-circle" height="25" alt="Black and White Portrait of a Man"
                                         loading="lazy" /> Author: <?php echo $data['fullname'] ?></small>
                             </div>
                             <div class="col-md-8">
                                 <h4><?php echo $data['judul']; ?></h4>
-                                <p class="text3">Dibuat Pada Tanggal : <?php echo $data['Created_at'] ?></p>
+                                <p class="text3">Dibuat Pada Tanggal : <?php echo $row2['Created_at'] ?></p>
                             </div>
                         </div>
                         <div class="row">

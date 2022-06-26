@@ -36,5 +36,5 @@ create table feedback(
     id_users int(11),
     category varchar(255), 
     isi varchar(255),
-    Created_at date    
+    Created_at     
 ) 
