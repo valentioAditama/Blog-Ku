@@ -182,7 +182,8 @@ if  (mysqli_num_rows($showData) == 0){
 
             <!-- Single item -->
             <div class="carousel-item">
-              <img src="assets/linus-torvalds--tedcom.jpg" class="d-block w-100" height="400" alt="Cliff Above a Stormy Sea" />
+              <img src="assets/linus-torvalds--tedcom.jpg" class="d-block w-100" height="400"
+                alt="Cliff Above a Stormy Sea" />
               <div class="carousel-caption d-none d-md-block">
                 <h5>Blog Trending Hari ini!</h5>
                 <p>Linus Tolrvalds adalah pendiri linux pertama kali</p>
@@ -203,31 +204,43 @@ if  (mysqli_num_rows($showData) == 0){
           </button>
         </div>
       </div>
+      <?php $trendingTopics = $db->query("SELECT * FROM blog ORDER BY id_blog DESC limit 1");
+        while ($dataTrending = mysqli_fetch_assoc($trendingTopics)) { ?>
       <div class="col-md-4">
         <h4>Trending Topics</h4>
         <p class="text3">Trending topics Pada Minggu Ini</p>
         <div class="mb-3">
-          <div class="row align-items-center shadow-4-strong p-1 rounded">
+          <div class="row align-items-center shadow-4-strong rounded">
             <div class="col-md-6">
-              <img src="assets/berita.jpeg" class="img-fluid rounded" alt="">
+              <a href="reviewBlog.php?id=<?php echo $dataTrending['id_blog'] ?>">
+                <img src="<?php echo $dataTrending['thumbnails'] ?>" class="img-fluid rounded" alt="">
+              </a>
             </div>
             <div class="col-md-6">
-              <h6>Facebook Resmi ganti nama menjadi Meta</h4>
-                <p class="text3">Facebook resmi menggantikan...</p>
+              <h6 class="mt-3"><?php echo substr($dataTrending['judul'],0 , 35) ?></h4>
+                <p class="text3"><?php echo substr($dataTrending['isi'],0 , 30) ?>...</p>
             </div>
           </div>
         </div>
+        <?php } ?>
+        <?php 
+        $trendingTopics2 = $db->query("SELECT * FROM blog WHERE category = 'Coding' ORDER BY id_blog DESC LIMIT 1");
+        while ($dataTrending2 = mysqli_fetch_assoc($trendingTopics2)) {
+        ?>
         <div class="mb-3">
-          <div class="row align-items-center shadow-4-strong p-1 rounded">
+          <div class="row align-items-center shadow-4-strong rounded">
             <div class="col-md-6">
-              <img src="assets/berita.jpeg" class="img-fluid rounded" alt="">
+              <a href="reviewBlog.php?id=<?php echo $dataTrending2['id_blog'] ?>">
+                <img src="<?php echo $dataTrending2['thumbnails'] ?>" class="img-fluid rounded" alt="">
+              </a>
             </div>
             <div class="col-md-6">
-              <h6>Facebook Resmi ganti nama menjadi Meta</h4>
-                <p class="text3">Facebook resmi menggantikan...</p>
+              <h6 class="mt-3"><?php echo substr($dataTrending2['judul'], 0 , 35) ?></h4>
+                <p class="text3"><?php echo substr($dataTrending2['isi'], 0 , 40) ?>...</p>
             </div>
           </div>
         </div>
+        <?php } ?>
       </div>
     </div>
   </div>
@@ -240,11 +253,11 @@ if  (mysqli_num_rows($showData) == 0){
         <p3>Mengenai Seputar Tutorial Show pada minggu ini</p3>
       </div>
       <div class="row">
-      <?php 
+        <?php 
         $showBlog = $db->query("SELECT * FROM blog WHERE category = 'Tutorial' ORDER BY id_blog DESC");
         while ($data2 = mysqli_fetch_assoc($showBlog)) {
         ?>
-       <div class="col-md-3">
+        <div class="col-md-3">
           <div class="card">
             <a href="reviewBlog.php?id=<?php echo $data2['id_blog'] ?>">
               <img src="<?php echo $data2['thumbnails'] ?>" class="card-img-top" height="145"

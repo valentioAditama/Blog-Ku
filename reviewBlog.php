@@ -200,31 +200,20 @@ if(isset($_GET['id'])){
                             Trending topics Hari ini pada kategori Teknologi
                         </p>
                         <div class="row align-items-center shadow-4-strong p-1 rounded mb-3">
-                            <div class="col-md-6">
-                                <img src="assets/berita.jpeg" class="img-fluid rounded" alt="">
+                            <?php 
+                                $showBlog = $db->query("SELECT * FROM blog WHERE category = 'Tutorial' ORDER BY id_blog DESC LIMIT 3");
+                                while ($data = mysqli_fetch_assoc($showBlog)) {
+                                ?>
+                            <div class="col-md-6 mb-3">
+                                <a href="reviewBlog.php?id=<?php echo $data['id_blog'] ?>">
+                                    <img src="<?php echo $data['thumbnails'] ?>" class="img-fluid rounded" height="145"
+                                        alt="Fissure in Sandstone" />
+                                </a> </div>
+                            <div class="col-md-6 mb-3">
+                                <h6 class="card-title mt-2"><?php echo substr($data['judul'], 0, 35) ?>...</h6>
+                                <p class="card-text"><?php echo substr($data['isi'], 0, 30); ?>...</p>
                             </div>
-                            <div class="col-md-6">
-                                <h6>Facebook Resmi ganti nama menjadi Meta</h4>
-                                    <p class="text3">Facebook resmi menggantikan...</p>
-                            </div>
-                        </div>
-                        <div class="row align-items-center shadow-4-strong p-1 rounded mb-3">
-                            <div class="col-md-6">
-                                <img src="assets/berita7.jpg" class="img-fluid rounded" alt="">
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Kelompok Hacker Klaim Bobol Sistem Keamanan PS5</h4>
-                                    <p class="text3">Facebook resmi menggantikan...</p>
-                            </div>
-                        </div>
-                        <div class="row align-items-center shadow-4-strong p-1 rounded mb-3">
-                            <div class="col-md-6">
-                                <img src="assets/berita2.jpeg" class="img-fluid rounded" alt="">
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Facebook Resmi ganti nama menjadi Meta</h4>
-                                    <p class="text3">Facebook resmi menggantikan...</p>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="align-items-center">
@@ -233,31 +222,20 @@ if(isset($_GET['id'])){
                             Trending topics Hari ini pada kategori Teknologi
                         </p>
                         <div class="row align-items-center shadow-4-strong p-1 rounded mb-3">
-                            <div class="col-md-6">
-                                <img src="assets/berita.jpeg" class="img-fluid rounded" alt="">
+                            <?php 
+                                $showBlog = $db->query("SELECT * FROM blog WHERE category = 'Teknologi' ORDER BY id_blog DESC LIMIT 3");
+                                while ($data = mysqli_fetch_assoc($showBlog)) {
+                                ?>
+                            <div class="col-md-6 mb-3">
+                                <a href="reviewBlog.php?id=<?php echo $data['id_blog'] ?>">
+                                    <img src="<?php echo $data['thumbnails'] ?>" class="img-fluid rounded" height="145"
+                                        alt="Fissure in Sandstone" />
+                                </a> </div>
+                            <div class="col-md-6 mb-3">
+                                <h6 class="card-title mt-2"><?php echo substr($data['judul'], 0, 35) ?>...</h6>
+                                <p class="card-text"><?php echo substr($data['isi'], 0, 30); ?>...</p>
                             </div>
-                            <div class="col-md-6">
-                                <h6>Facebook Resmi ganti nama menjadi Meta</h4>
-                                    <p class="text3">Facebook resmi menggantikan...</p>
-                            </div>
-                        </div>
-                        <div class="row align-items-center shadow-4-strong p-1 rounded mb-3">
-                            <div class="col-md-6">
-                                <img src="assets/berita7.jpg" class="img-fluid rounded" alt="">
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Kelompok Hacker Klaim Bobol Sistem Keamanan PS5</h4>
-                                    <p class="text3">Facebook resmi menggantikan...</p>
-                            </div>
-                        </div>
-                        <div class="row align-items-center shadow-4-strong p-1 rounded mb-3">
-                            <div class="col-md-6">
-                                <img src="assets/berita2.jpeg" class="img-fluid rounded" alt="">
-                            </div>
-                            <div class="col-md-6">
-                                <h6>Facebook Resmi ganti nama menjadi Meta</h4>
-                                    <p class="text3">Facebook resmi menggantikan...</p>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>

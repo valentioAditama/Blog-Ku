@@ -112,8 +112,22 @@
     new TypeIt("#myElement", {
   strings: "Selamat Datang di Blog-ku!",
   speed: 100,
-  loop: true,
-}).go();
+  loop: false,
+})
+.pause(5000)
+.delete(30)
+.type("Hi, Caon Bloer!")
+.pause(2000)
+.move(-3)
+.type('g')
+.type('g')
+.type('g')
+.delete(1)
+.pause(2000)
+.move(-8)
+.type('l')
+.move(12)
+.go();
 
   </script>
 </body>
